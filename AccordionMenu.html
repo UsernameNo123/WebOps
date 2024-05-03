@@ -1,51 +1,81 @@
 <html>
+    <title>
+        W&B List
+    </title>
+    <body>
+        <h1>
+            APPLE PRODUCTS LIST
+        </h1>
+        <div class="whole">
+            <button class="menu">
+                iPhone
+            </button>
+            <div class="list">
+                <p>iPhone 15 <br> iPhone 14 <br> iPhone 13 <br> iPhone 12 <br> iPhone 11 <br> iPhone X <br> iPhone 8 <br> iPhone 7 <br> iPhone 6 <br> iPhone 5 <br> iPhone 4 <br> iPhone 3 <br> iPhone Original</p>
+            </div>
+            <button class="menu">
+                iPad
+            </button>
+            <div class="list">
+                <p>iPad Pro <br> iPad Air <br> iPad <br> iPad Mini</p>
+            </div>
+            <button class="menu">
+                MacBook
+            </button>
+            <div class="list">
+                <p>MacBook Pro <br> MacBook Air <br> iMAC</p>
+            </div>
+        </div>
+    </body>
     <style>
-        .header{
+        h1{
             text-align: center;
             margin-top: 50px;
         }
-        .Lists{
+        .menu{
+            width: 25%;
             text-align: center;
-            width: 100%;
-        }
-        button{
-            margin-top: 20px;
-            width: 300px;
+            height: 50px;
+            border-radius: 30px;
             border: none;
-            background-color: yellow;
+            background-color: aqua;
+            margin-top: 25px;
+        }
+        .active, .menu:hover{
+            background-color: aquamarine;
+        }
+        .list{
+            overflow: hidden;
+            padding: 0 ;
+            max-height: 0;
+            transition: 0.5s;
+            text-align: center;
+        }
+        p{
+            font-size: medium;
+            
+        }
+        .whole{
+            text-align: center;
+            margin-top: 150px;
         }
     </style>
-    <body>
-        <title>
-            Apple.com
-        </title>
-        <h1 class="header">
-            Apple
-        </h1>
-        <h3>
-            Apple Products and its release year
-        </h3>
-        <div class="Lists">
-            <button onclick="document.querySelector('.iphone').innerHTML='iPhone 15 <br> iPhone 14 <br> iPhone 13 <br> iPhone 12 <br> iPhone 11 <br> iPhone X <br> iPhone 8 <br> iPhone 7 <br> iPhone 6'">
-                iPhone
-            </button>
-            <p class="iphone"></p>
-            <br>
-            <button class="ipad">
-                iPad
-            </button>
-            <p></p>
-            <br>
-            <button class="macbook">
-                MacBook
-            </button>
-            <p></p>
-            <br>
-            <button class="airpods">
-                AirPods
-            </button>
-            <p></p>
-            <br>
-        </div>
-    </body>
+    <script>
+        var list1 = document.getElementsByClassName("menu");
+        var i;
+
+        for(i=0;i<list1.length;i++){
+            list1[i].addEventListener("click", function(){
+                this.classList.toggle("active");
+                
+                var list = this.nextElementSibling;
+                if(list.style.maxHeight){
+                    list.style.maxHeight = null;
+                }
+                else{
+                    list.style.maxHeight = list.scrollHeight + "px";
+                }
+            })
+        }
+    </script>
 </html>
