@@ -4,32 +4,36 @@ pragma solidity >=0.8.2 <0.9.0;
 
 contract tryingBank{
     address public owner;
-    bool public paused;
-    mapping(address => uint) public balance;
-    address[] public userList;
-    address public userID;
-    constructor (){
-        userID = msg.sender;
-        //paused = false;
-        //balance[owner] = 100000;
+    //bool public paused;
+    mapping(address => uint) internal balance;
+    mapping(address => uint256[]) public loanList;
+    mapping(address => uint256[]) public loanTime;
+    address[] internal userList;
+    bool public existing = false;
+    
+    uint8 counter=0;
+    function inputUserID(address userID) public{
+        for(uint8 i=0;i<userList.length;i++){
+            //require(userList[i]==msg.sender , userList.push(msg.sender));
+            if(userList[i]==userID){
+                existing = true;
+                break;
+            }
+            else{
+                counter++;
+            }
+        }
+        if(counter == userList.length){
+            userList.push(userID);
+            existing = true;
+        }
+        if(existing == true && counter != userList.length){
+            balance[userID]= 100000;
+        }
     }
-    modifier isOwner(){
-        require(msg.sender == owner, "sorry mate, you ain't the owner!");
-        _;
+    function getUserList()public view returns (address[] memory){
+        return userList;
     }
-
-    modifier isPaused(){
-        require(paused == false, "I ain't on pause!");
-        _;
-    }
-
-    function pause() public isOwner{
-        paused = true; 
-    }
-    function notPause() public isOwner{
-        paused = false;
-    }
-
     function transfer(address to , uint256 amount) public {
         require(balance[msg.sender] > amount, "Sorry, you ain't got enought money");
         balance[msg.sender] = balance[msg.sender]-amount;
@@ -45,9 +49,19 @@ contract tryingBank{
         balance[msg.sender] -= amount;
     }
 
-    function loan(uint256 loan_amount ) public {
-        require(balance[msg.sender] >= (loan_amount)/2, "Sorry you are ineligible for loan");
-        balance[msg.sender] += loan_amount;  //msg.sender is the borrower
+    function loan(uint256 loan_amount , uint256 total_collateral) public {
+        require(total_collateral >= (loan_amount)/2, "Sorry you are ineligible for loan");
+        balance[msg.sender] += loan_amount;
+        loanList[msg.sender].push(loan_amount);
+        loanTime[msg.sender].push(block.timestamp); //msg.sender is the borrower
     }
 
+    function repayLoan(uint8 loanamount,uint8 LoanID) public{
+        uint256 timestamp = block.timestamp;
+        uint256 time = loanTime[msg.sender][LoanID];
+        if(timestamp-time >= 60){
+            loanamount += 100;
+        }
+        balance[msg.sender] -=loanamount;
+    }
 }
