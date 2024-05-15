@@ -3,12 +3,13 @@
 pragma solidity >=0.8.2 <0.9.0;
 
 contract tryingBank{
-    address public owner;
+    
     //bool public paused;
     mapping(address => uint) internal balance;
     mapping(address => uint256[]) public loanList;
     mapping(address => uint256[]) public loanTime;
     address[] internal userList;
+    address public bankAddress = address(this);
     bool public existing = false;
     
     uint8 counter=0;
@@ -31,6 +32,7 @@ contract tryingBank{
             balance[userID]= 100000;
         }
     }
+    
     function getUserList()public view returns (address[] memory){
         return userList;
     }
@@ -38,6 +40,11 @@ contract tryingBank{
         require(balance[msg.sender] > amount, "Sorry, you ain't got enought money");
         balance[msg.sender] = balance[msg.sender]-amount;
         balance[to] += amount;
+    }
+    function deposit(uint256 amount) public {
+        require(balance[msg.sender] > amount, "Sorry, you ain't got enought money");
+        balance[msg.sender]-=amount;
+        balance[bankAddress]+=amount;
     }
 
     function BalanceDisplay() public view returns (uint256){
